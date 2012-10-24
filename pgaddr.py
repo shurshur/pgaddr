@@ -34,19 +34,19 @@ try:
 except:
   usage()
 
-q="SELECT '%%s',a.osm_id,a.name,a.tags->'addr:postcode',a.tags->'addr:region',a.tags->'addr:district',a.tags->'addr:city',a.tags->'addr:street',a.\"addr:housenumber\" FROM %%s a LEFT JOIN osm_polygon b ON ST_Within(a.way,b.way) WHERE a.\"addr:housenumber\" IS NOT NULL AND b.osm_id='%s'" % (bnd_id)
+q="SELECT '%%s',a.osm_id,%%s,a.name,a.tags->'addr:postcode',a.tags->'addr:region',a.tags->'addr:district',a.tags->'addr:city',a.tags->'addr:street',a.\"addr:housenumber\" FROM %%s a LEFT JOIN osm_polygon b ON ST_Within(a.way,b.way) WHERE a.\"addr:housenumber\" IS NOT NULL AND b.osm_id='%s'" % (bnd_id)
 #print q
-q = (q % ("way", "osm_polygon")) + " UNION " + (q % ("node", "osm_point"))
+q = (q % ("way", "ST_Y(ST_Centroid(a.way)),ST_X(ST_Centroid(a.way))", "osm_polygon")) + " UNION " + (q % ("node", "ST_Y(a.way),ST_X(a.way)", "osm_point"))
 #print q
 cc.execute(q)
 
-print '"type";"id";"name";"addr:postcode";"addr:region";"addr_district";"addr:city";"addr:street";"addr:housenumber"'
+print '"type";"id";"lat";"lon";"name";"addr:postcode";"addr:region";"addr_district";"addr:city";"addr:street";"addr:housenumber"'
 
 while True:
   row = cc.fetchone()
   if not row:
     break
-  type,osm_id,name,addr_postcode,addr_region,addr_district,addr_city,addr_street,addr_housenumber = row
-  print ('"%s";"%s";"%s";"%s";"%s";"%s";"%s";"%s";"%s"' % (type,osm_id,name,addr_postcode,addr_region,addr_district,addr_city,addr_street,addr_housenumber))
+  type,osm_id,lat,lon,name,addr_postcode,addr_region,addr_district,addr_city,addr_street,addr_housenumber = row
+  print ('"%s";"%s";"%s";"%s";"%s";"%s";"%s";"%s";"%s";"%s";"%s"' % (type,osm_id,lat,lon,name,addr_postcode,addr_region,addr_district,addr_city,addr_street,addr_housenumber))
 
 
