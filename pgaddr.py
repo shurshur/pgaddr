@@ -19,7 +19,7 @@ cc = pg.cursor()
 register_hstore(cc)
 
 def usage():
-  print """Export OSM addresses from Gis-Lab PostGIS
+  print ("""Export OSM addresses from Gis-Lab PostGIS
 (c) Alexandr Zeinalov, 2011-2012
 
 Usage: pgaddr [OPTIONS] BOUNDARY > FILE.csv
@@ -32,7 +32,7 @@ Options:
   -k        - Get names from Karlsruhe tags only
               (default: from Karlsruhe and administrative boundaries)
 
-"""
+""")
   sys.exit(0)
 
 args = []
@@ -59,7 +59,7 @@ else:
 cc.execute(q)
 
 #print '"type";"id";"lat";"lon";"name";"addr:postcode";"addr:region";"addr_district";"addr:city";"addr:street";"addr:housenumber"'
-print "Тип;ID;Долгота;Широта;Название;\"Почтовый индекс\";\"Регион\";\"Район\";\"Город/поселение\";\"Улица\";\"Дом\""
+print ("Тип;ID;Долгота;Широта;Название;\"Почтовый индекс\";\"Регион\";\"Район\";\"Город/поселение\";\"Улица\";\"Дом\"")
 
 while True:
   row = cc.fetchone()
